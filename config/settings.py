@@ -123,3 +123,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATICFILES_DIRS = [
+    # djangogirls/static 폴더 path가 여기에 추가되도록 한다.
+    os.path.join(BASE_DIR, 'static')
+]

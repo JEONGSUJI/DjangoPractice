@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from blog.models import Post
 
@@ -21,7 +21,8 @@ def post_list(request):
     # content = loader.render_to_string('post-list.html', None, request)
     # return HttpResponse(content)
 
-    posts = Post.objects.all()
+    # posts = Post.objects.all()
+    posts = Post.objects.order_by('-pk')
 
     context = {
         'posts': posts,
@@ -47,3 +48,25 @@ def post_detail(request, pk):
     }
 
     return render(request, 'post-detail.html', context)
+
+
+def post_add(request):
+    if request.method == 'POST':
+        print('request', request)
+        author = request.user
+        title = request.POST['title']
+        text = request.POST['text']
+
+        post = Post.objects.create(
+            title=title,
+            author=author,
+            text=text,
+        )
+
+        print('post',post)
+        # result = f'title: {post.title}, created_date: {post.created_date}'
+        # return HttpResponse(result)
+        return redirect('post-list')
+
+    else:
+        return render(request, 'post-add.html')
